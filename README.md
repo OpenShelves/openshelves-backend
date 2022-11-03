@@ -4,3 +4,8 @@ OpenShelves should become an easy to use Warehouse Management System. It will be
 For the Frontend Flutter from Google will be used. It gives our system the ability to run on different devices.
 
 So feel free to join us!
+
+
+# Commands
+
+docker exec -it openshelves-backend_php_1 bash 
