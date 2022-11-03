@@ -1,0 +1,37 @@
+version: '2'
+services:
+
+  php:
+    build:
+      context: ./docker/apache
+    ports:
+      - 4090:80
+    volumes: 
+      - ./src:/var/www/html/
+      - ./docker/apache/vhosts:/etc/apache2/sites-enabled
+    links: 
+      - mysql:mysql
+
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: demo
+    volumes: 
+      - ./sql:/var/sql
+      - ./dbdata:/var/lib/mysql
+      - ./docker/mysql/:/tmp/database
+  phpmyadmin:
+    depends_on:
+      - mysql
+    image: phpmyadmin/phpmyadmin
+    links: 
+      - mysql:mysql
+    ports:
+      - 4091:80
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: demo
+      PMA_USER: root
+      PMA_PASSWORD: demo
