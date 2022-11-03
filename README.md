@@ -9,3 +9,5 @@ So feel free to join us!
 # Commands
 
 docker exec -it openshelves-backend_php_1 bash 
+
+php artisan migrate:install
