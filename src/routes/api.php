@@ -23,8 +23,8 @@ Route::post('register', 'App\Http\Controllers\PassportController@register');
 
 Route::group(['middleware' => 'auth:api'], function(){
 	Route::post('get-details', 'App\Http\Controllers\PassportController@getDetails');
+    Route::get('products', 'App\Http\Controllers\ProductController@list');
 });
 
-// Route::apiResource('products', 'ProductController')->middleware('auth:api');
 
 // Route::middleware('auth:passport')

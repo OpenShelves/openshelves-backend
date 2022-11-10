@@ -6,8 +6,6 @@ use App\Models\User as ModelsUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use App\User;
-use Illuminate\Support\Facades\Validator as FacadesValidator;
 use Validator;
 
 class PassportController extends Controller
