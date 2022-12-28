@@ -25,6 +25,17 @@ Route::group(['middleware' => 'auth:api'], function(){
 	Route::post('get-details', 'App\Http\Controllers\PassportController@getDetails');
     Route::get('products', 'App\Http\Controllers\ProductController@list');
     Route::get('products/search', 'App\Http\Controllers\ProductController@search');
+    Route::post('product', 'App\Http\Controllers\ProductController@store');
+
+
+
+    Route::post('warehouse', 'App\Http\Controllers\WarehouseController@store');
+    Route::get('warehouse/{id}', 'App\Http\Controllers\WarehouseController@getwarehouse');
+    Route::get('warehouses', 'App\Http\Controllers\WarehouseController@getwarehouses');
+    Route::delete('warehouse/{id}', 'App\Http\Controllers\WarehouseController@delete');
+    
+    
+    Route::get('warehouseplaces', 'App\Http\Controllers\WarehousePlaceController@list');
 });
 
 
