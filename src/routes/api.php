@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('products', 'App\Http\Controllers\ProductController@list');
     Route::get('products/search', 'App\Http\Controllers\ProductController@search');
     Route::post('product', 'App\Http\Controllers\ProductController@store');
+    Route::post('productbycode', 'App\Http\Controllers\ProductController@productbycode');
 
 
 
@@ -36,6 +37,14 @@ Route::group(['middleware' => 'auth:api'], function(){
     
     
     Route::get('warehouseplaces', 'App\Http\Controllers\WarehousePlaceController@list');
+    Route::post('warehouseplace', 'App\Http\Controllers\WarehousePlaceController@store');
+    Route::delete('warehouseplace/{id}', 'App\Http\Controllers\WarehousePlaceController@delete');
+    
+    
+    Route::post('inventory', 'App\Http\Controllers\InventoryController@store');
+    Route::get('inventory/{id}/products', 'App\Http\Controllers\InventoryController@productsByWarehousePlace');
+
+    
 });
 
 

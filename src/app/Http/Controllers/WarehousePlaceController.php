@@ -18,20 +18,27 @@ class WarehousePlaceController extends Controller
         // Validate the request data
         $request->validate([
             'name' => 'required',
-            'warehouse_id' => 'required|numeric',
+            'warehouse.id' => 'required|numeric',
         ]);
 
+        if($request->input('id')) {
+            $warehousePlace = WarehousePlace::with('warehouse')->find($request->input('id'));
+        } else {
+
+            $warehousePlace = new WarehousePlace();
+        }
+
         // Create a new warehouse place
-        $warehousePlace = new WarehousePlace();
         $warehousePlace->name = $request->input('name');
-        $warehousePlace->warehouse_id = $request->input('warehouse_id');
+        $warehousePlace->warehouse_id = $request->input('warehouse.id');
         $warehousePlace->save();
 
         // Return the newly created warehouse place
-        return response()->json([
-            'message' => 'Warehouse place created successfully',
-            'warehouse_place' => WarehousePlace::with('warehouse')->find($warehousePlace->id),
-        ], 201);
+        // return response()->json([
+        //     'message' => 'Warehouse place created successfully',
+        //     'warehouse_place' => WarehousePlace::with('warehouse')->find($warehousePlace->id),
+        // ], 201);
+        return response()->json( WarehousePlace::with('warehouse')->find($warehousePlace->id), 200);
     }
 
     public function list()
@@ -43,14 +50,15 @@ class WarehousePlaceController extends Controller
     return response()->json($warehousePlaces);
 }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\WarehousePlace  $warehousePlace
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(WarehousePlace $warehousePlace)
-    {
-        //
+public function delete(Request $request, $id) {
+    $warehousePlace = WarehousePlace::find($id);
+
+    if (!$warehousePlace) {
+        return response()->json(['error' => 'Warehouse not found'], 404);
     }
+
+    $warehousePlace->delete();
+
+    return response()->json(['message' => 'WarehousePlace deleted successfully'], 200);
+}
 }

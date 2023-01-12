@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -22,6 +23,20 @@ class ProductController extends Controller
 
     private function getSKU() {
         return 'TESTSKU';
+    }
+
+    public function productbycode(Request $request) {
+        $data = $request->json()->all();
+        $validator = Validator::make($data, [
+            'code' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);            
+        }
+        $product = Product::where('ean', '=', $data['code'])->first();
+
+        return $product;
     }
 
     public function store(Request $request) {
