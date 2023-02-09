@@ -20,13 +20,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('login', 'App\Http\Controllers\PassportController@login');
 Route::post('register', 'App\Http\Controllers\PassportController@register');
+Route::get('products/total', 'App\Http\Controllers\ProductController@totalProducts');
 
 Route::group(['middleware' => 'auth:api'], function(){
-	Route::post('get-details', 'App\Http\Controllers\PassportController@getDetails');
+    Route::post('get-details', 'App\Http\Controllers\PassportController@getDetails');
     Route::get('products', 'App\Http\Controllers\ProductController@list');
     Route::get('products/search', 'App\Http\Controllers\ProductController@search');
     Route::post('product', 'App\Http\Controllers\ProductController@store');
     Route::post('productbycode', 'App\Http\Controllers\ProductController@productbycode');
+    Route::get('product/{id}', 'App\Http\Controllers\ProductController@productbyid');
 
 
 
@@ -37,12 +39,14 @@ Route::group(['middleware' => 'auth:api'], function(){
     
     
     Route::get('warehouseplaces', 'App\Http\Controllers\WarehousePlaceController@list');
+    Route::get('warehouseplace/{id}', 'App\Http\Controllers\WarehousePlaceController@getWarehouseById');
     Route::post('warehouseplace', 'App\Http\Controllers\WarehousePlaceController@store');
     Route::delete('warehouseplace/{id}', 'App\Http\Controllers\WarehousePlaceController@delete');
     
     
     Route::post('inventory', 'App\Http\Controllers\InventoryController@store');
     Route::get('inventory/{id}/products', 'App\Http\Controllers\InventoryController@productsByWarehousePlace');
+    Route::get('inventory/{id}/warehouseplaces', 'App\Http\Controllers\InventoryController@productsByProductId');
 
     
 });

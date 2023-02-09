@@ -41,14 +41,23 @@ class WarehousePlaceController extends Controller
         return response()->json( WarehousePlace::with('warehouse')->find($warehousePlace->id), 200);
     }
 
-    public function list()
-{
-    // Get all warehouse places
-    $warehousePlaces = WarehousePlace::with('warehouse')->get();
+    public function getWarehouseById($id) {
+        $warehousePlace = WarehousePlace::with('warehouse')->find($id);
+        if($warehousePlace) {
+            return $warehousePlace;
+        }
 
-    // Return the warehouse places
-    return response()->json($warehousePlaces);
-}
+        return response()->json(['error'=>'WarehousePlace not found'], 404);
+    }
+
+    public function list()
+    {
+        // Get all warehouse places
+        $warehousePlaces = WarehousePlace::with('warehouse')->get();
+
+        // Return the warehouse places
+        return response()->json($warehousePlaces);
+    }
 
 public function delete(Request $request, $id) {
     $warehousePlace = WarehousePlace::find($id);
