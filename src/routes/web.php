@@ -17,5 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/login', function () {
-    return response()->json(['error'=>'not logged in'], 401);
+    return response()->json(['error' => 'not logged in'], 401);
 })->name('login');
+
+Route::get('/label/{code}', 'App\Http\Controllers\LabelController@createLabel');
+Route::get('/label2/{code}', 'App\Http\Controllers\LabelController@createLabel2');

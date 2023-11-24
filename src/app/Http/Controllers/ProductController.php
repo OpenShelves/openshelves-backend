@@ -4,77 +4,99 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use App\Models\Product;
+use Hamcrest\Type\IsNumeric;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    public function list() {
+    public function list()
+    {
+
+
+        $productsQuery = DB::table('products')->orderBy('products.name');
+        $productsQuery->selectRaw('sum(quantity) as quantity, products.*');
+        $productsQuery->leftJoin('inventories', 'products.id', '=', 'products_id');
+        $productsQuery->groupBy('products.id');
+        return $productsQuery->get();
 
         // $products = Product::limit(20)->get();
         $products = Product::get();
-        if(count($products)>0) {
-            
-            return $products;
-        } 
+        if (count($products) > 0) {
 
-        return response()->json(['error'=>'Products not found'], 404);
+            return $products;
+        }
+
+        return response()->json(['error' => 'Products not found'], 404);
     }
 
-    public function search() {
+    public function search()
+    {
         $query = request('query');
-        $products = Product::where('name', 'like', '%'.$query.'%')->get();
-        if(count($products)>0) {
-            
-            return $products;
-        } 
+        if (is_numeric($query) && strlen($query) == 13) {
+            $product = Product::where('ean', '=', $query)->first();
+            if ($product) {
 
-        return response()->json(['error'=>'Products not found'], 404);
+                return [$product];
+            }
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+        $products = Product::where('name', 'like', '%' . $query . '%')->get();
+        if (count($products) > 0) {
+
+            return $products;
+        }
+
+        return response()->json(['error' => 'Products not found'], 404);
     }
 
-    private function getSKU() {
+    private function getSKU()
+    {
         return 'TESTSKU';
     }
 
-    public function productbycode(Request $request) {
+    public function productbycode(Request $request)
+    {
         $data = $request->json()->all();
         $validator = Validator::make($data, [
             'code' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 401);            
+            return response()->json(['error' => $validator->errors()], 401);
         }
         $product = Product::where('ean', '=', $data['code'])->first();
-        if($product) {
+        if ($product) {
 
             return $product;
-        } 
-        return response()->json(['error'=>'Product not found'], 404);            
+        }
+        return response()->json(['error' => 'Product not found'], 404);
     }
 
-    public function productbyid($id) {
-       
+    public function productbyid($id)
+    {
+
         $product = Product::find($id);
-        if($product) {
+        if ($product) {
 
             return $product;
-        } 
-        return response()->json(['error'=>'Product not found'], 404);            
+        }
+        return response()->json(['error' => 'Product not found'], 404);
     }
 
-    public function totalProducts() {
+    public function totalProducts()
+    {
         $total = array();
         $total['products'] = 0;
         $total['quantity'] = 0;
         $products = Product::all();
-        if($products) {
+        if ($products) {
             $total['products'] = count($products);
         }
 
         $inventory = Inventory::select(DB::raw('sum(quantity) as total'))->first();
-        if($inventory  ){
+        if ($inventory) {
             $total['quantity'] =  intval($inventory['total']);
         }
 
@@ -82,8 +104,9 @@ class ProductController extends Controller
     }
 
 
-    public function store(Request $request) {
-        if(!$request->id) {
+    public function store(Request $request)
+    {
+        if (!$request->id) {
             $product = new Product();
         } else {
 
@@ -99,9 +122,9 @@ class ProductController extends Controller
         $product->height = $request->height;
         $product->price = $request->price;
         $product->height = $request->height;
-        if(!$request->sku) {
+        if (!$request->sku) {
             $product->sku = $this->getSKU();
-        }else {
+        } else {
 
             $product->sku = $request->sku;
         }

@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Validator;
 
 class InventoryController extends Controller
 {
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $data = $request->json()->all();
         $validator = Validator::make($data, [
             'quantity' => 'required',
@@ -22,7 +23,7 @@ class InventoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 401);            
+            return response()->json(['error' => $validator->errors()], 401);
         }
 
         $inventory = new Inventory();
@@ -30,14 +31,13 @@ class InventoryController extends Controller
         $inventory->change_date = new DateTime();
         $inventory->warehouse_places_id = $data['warehouse_places_id'];
         $inventory->products_id = $data['products_id'];
-        
+
         $inventory->save();
-        return $inventory;  
-    
-    
+        return $inventory;
     }
 
-    function createQuery() {
+    function createQuery()
+    {
         $productsQuery = DB::table('products')->orderBy('products.name');
         $productsQuery->selectRaw('sum(quantity) as quantity, products.name as products_name, warehouse_places.name as warehouse_places_name, products.id as products_id, warehouse_places.id as warehouse_places_id');
         $productsQuery->groupBy('products.id');
@@ -47,26 +47,28 @@ class InventoryController extends Controller
         return $productsQuery;
     }
 
-    public function productsByWarehousePlace($id) {
+    public function productsByWarehousePlace($id)
+    {
         $productsQuery = $this->createQuery();
         $productsQuery->where('warehouse_places_id', '=', $id);
         $products = $productsQuery->get();
-        if(count($products)>0) {
-            
-            return $products;
-        } 
+        if (count($products) > 0) {
 
-        return response()->json(['error'=>'Products not found'], 404);
+            return $products;
+        }
+
+        return response()->json(['error' => 'Products not found'], 404);
     }
-    public function productsByProductId($id) {
+    public function productsByProductId($id)
+    {
         $productsQuery = $this->createQuery();
         $productsQuery->where('products_id', '=', $id);
         $products = $productsQuery->get();
-        if(count($products)>0) {
-            
-            return $products;
-        } 
+        if (count($products) > 0) {
 
-        return response()->json(['error'=>'Products not found'], 404);
+            return $products;
+        }
+
+        return response()->json(['error' => 'Products not found'], 404);
     }
 }

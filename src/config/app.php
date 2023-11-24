@@ -196,6 +196,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
 
+        Elibyy\TCPDF\ServiceProvider::class,
+
     ],
 
     /*
@@ -210,6 +212,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'PDF' => Elibyy\TCPDF\Facades\TCPDF::class
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 

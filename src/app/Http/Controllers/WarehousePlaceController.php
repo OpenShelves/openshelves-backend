@@ -21,7 +21,7 @@ class WarehousePlaceController extends Controller
             'warehouse.id' => 'required|numeric',
         ]);
 
-        if($request->input('id')) {
+        if ($request->input('id')) {
             $warehousePlace = WarehousePlace::with('warehouse')->find($request->input('id'));
         } else {
 
@@ -31,6 +31,13 @@ class WarehousePlaceController extends Controller
         // Create a new warehouse place
         $warehousePlace->name = $request->input('name');
         $warehousePlace->warehouse_id = $request->input('warehouse.id');
+        if ($request->input('parent')) {
+            $warehousePlace->warehouse_places_id = $request->input('warehouse_places_id');
+        }
+        if ($request->input('barcode')) {
+            $warehousePlace->barcode = $request->input('barcode');
+        }
+
         $warehousePlace->save();
 
         // Return the newly created warehouse place
@@ -38,16 +45,17 @@ class WarehousePlaceController extends Controller
         //     'message' => 'Warehouse place created successfully',
         //     'warehouse_place' => WarehousePlace::with('warehouse')->find($warehousePlace->id),
         // ], 201);
-        return response()->json( WarehousePlace::with('warehouse')->find($warehousePlace->id), 200);
+        return response()->json(WarehousePlace::with('warehouse')->find($warehousePlace->id), 200);
     }
 
-    public function getWarehouseById($id) {
+    public function getWarehouseById($id)
+    {
         $warehousePlace = WarehousePlace::with('warehouse')->find($id);
-        if($warehousePlace) {
+        if ($warehousePlace) {
             return $warehousePlace;
         }
 
-        return response()->json(['error'=>'WarehousePlace not found'], 404);
+        return response()->json(['error' => 'WarehousePlace not found'], 404);
     }
 
     public function list()
@@ -59,15 +67,16 @@ class WarehousePlaceController extends Controller
         return response()->json($warehousePlaces);
     }
 
-public function delete(Request $request, $id) {
-    $warehousePlace = WarehousePlace::find($id);
+    public function delete(Request $request, $id)
+    {
+        $warehousePlace = WarehousePlace::find($id);
 
-    if (!$warehousePlace) {
-        return response()->json(['error' => 'Warehouse not found'], 404);
+        if (!$warehousePlace) {
+            return response()->json(['error' => 'Warehouse not found'], 404);
+        }
+
+        $warehousePlace->delete();
+
+        return response()->json(['message' => 'WarehousePlace deleted successfully'], 200);
     }
-
-    $warehousePlace->delete();
-
-    return response()->json(['message' => 'WarehousePlace deleted successfully'], 200);
-}
 }
