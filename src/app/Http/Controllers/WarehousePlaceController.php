@@ -32,7 +32,7 @@ class WarehousePlaceController extends Controller
         $warehousePlace->name = $request->input('name');
         $warehousePlace->warehouse_id = $request->input('warehouse.id');
         if ($request->input('parent')) {
-            $warehousePlace->warehouse_places_id = $request->input('warehouse_places_id');
+            $warehousePlace->parent_warehouse_places_id = $request->input('parent')['id'];
         }
         if ($request->input('barcode')) {
             $warehousePlace->barcode = $request->input('barcode');
@@ -51,6 +51,16 @@ class WarehousePlaceController extends Controller
     public function getWarehouseById($id)
     {
         $warehousePlace = WarehousePlace::with('warehouse')->find($id);
+        if ($warehousePlace) {
+            return $warehousePlace;
+        }
+
+        return response()->json(['error' => 'WarehousePlace not found'], 404);
+    }
+
+    public function getWarehouseByBarcode($barcode)
+    {
+        $warehousePlace = WarehousePlace::with('warehouse')->where('barcode', '=', $barcode)->first();
         if ($warehousePlace) {
             return $warehousePlace;
         }

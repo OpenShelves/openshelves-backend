@@ -52,12 +52,12 @@ class InventoryController extends Controller
         $productsQuery = $this->createQuery();
         $productsQuery->where('warehouse_places_id', '=', $id);
         $products = $productsQuery->get();
-        if (count($products) > 0) {
+        // if (count($products) > 0) {
 
-            return $products;
-        }
+        return $products;
+        // }
 
-        return response()->json(['error' => 'Products not found'], 404);
+        // return response()->json(['error' => 'Products not found'], 404);
     }
     public function productsByProductId($id)
     {

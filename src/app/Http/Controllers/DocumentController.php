@@ -92,7 +92,7 @@ class DocumentController extends Controller
     }
     public function getDocumentRowsByDocumentId(Request $request, $id)
     {
-        $documentRows = DocumentRow::where('document_id', $id)->with('tax')->orderBy('pos', 'asc')->get();
+        $documentRows = DocumentRow::where('document_id', $id)->with(['tax', 'product'])->orderBy('pos', 'asc')->get();
         // $document = Document::where('id', $id)->with('documentRows')->first();
         return $documentRows;
     }

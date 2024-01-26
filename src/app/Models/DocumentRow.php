@@ -17,4 +17,8 @@ class DocumentRow extends Model
     {
         return $this->belongsTo(Tax::class);
     }
+    function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

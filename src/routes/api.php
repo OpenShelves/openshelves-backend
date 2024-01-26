@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('warehouseplace/{id}', 'App\Http\Controllers\WarehousePlaceController@getWarehouseById');
     Route::post('warehouseplace', 'App\Http\Controllers\WarehousePlaceController@store');
     Route::delete('warehouseplace/{id}', 'App\Http\Controllers\WarehousePlaceController@delete');
+    Route::get('warehouseplace/barcode/{barcode}', 'App\Http\Controllers\WarehousePlaceController@getWarehouseByBarcode');
 
 
     Route::post('inventory', 'App\Http\Controllers\InventoryController@store');
@@ -56,7 +57,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('document/{id}', 'App\Http\Controllers\DocumentController@getDocumentsById');
 
     Route::get('taxrates', 'App\Http\Controllers\TaxController@getTaxRates');
+
+    Route::get('user', 'App\Http\Controllers\UserController@getUser');
+    Route::post('user/create', 'App\Http\Controllers\UserController@createUser');
 });
+Route::post('file', 'App\Http\Controllers\FileController@storeFile');
 
 
 // Route::middleware('auth:passport')
